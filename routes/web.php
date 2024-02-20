@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\BookController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -23,3 +24,9 @@ Route::post('api/v1/user/createOrUpdate', [UserController::class, 'createOrUpdat
 Route::get('api/v1/user/getAllUsers', [UserController::class, 'getAllUsers']);
 Route::get('api/v1/user/getUserByUsername/{username}', [UserController::class, 'getUserByUsername']);
 Route::delete('api/v1/user/deleteUserByUsername/{username}', [UserController::class, 'deleteUserByUsername']);
+
+// Маршруты для работы с книгами
+Route::post('api/v1/book/createOrUpdate', [BookController::class, 'createOrUpdate']);
+Route::get('api/v1/book/getBooks', [BookController::class, 'getBooks']);
+Route::get('api/v1/book/getBookByName/{name}', [BookController::class, 'getBookByName']);
+Route::delete('api/v1/book/deleteBookByName/{name}', [BookController::class, 'deleteBookByName']);
