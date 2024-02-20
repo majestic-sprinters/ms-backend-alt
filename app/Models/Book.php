@@ -4,23 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Jenssegers\Mongodb\Eloquent\Model as Eloquent;
 
-class Book extends Model
+class Book extends Eloquent
 {
-    use HasFactory;
+    protected $collection = 'books';
 
-    protected $table = 'books'; // Define the table name
-
-    protected $primaryKey = 'id'; // Define the primary key field
-
-    protected $fillable = [
-        'name',
-        'description',
-        'author',
-        'year',
-        'publisher',
-    ];
-
-    public $timestamps = false;
+    protected $fillable = ['name', 'description', 'author', 'year', 'publisher'];
 
 }
