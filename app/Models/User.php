@@ -9,5 +9,10 @@ class User extends Eloquent
 {
     protected $collection = 'users';
 
-    protected $fillable = ['fio', 'username', 'password', 'gender'];
+    protected $fillable = [
+        'fio',
+        'username',
+        'password',
+        'gender'
+    ];
 }
