@@ -1,7 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use Illuminate\Http\Request;
+use App\Http\Controllers\UserController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -16,3 +17,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+
+Route::post('api/v1/user/createOrUpdate', [UserController::class, 'createOrUpdate']);
+Route::get('api/v1/user/getAllUsers', [UserController::class, 'getAllUsers']);
+Route::get('api/v1/user/getUserByUsername/{username}', [UserController::class, 'getUserByUsername']);
+Route::delete('api/v1/user/deleteUserByUsername/{username}', [UserController::class, 'deleteUserByUsername']);

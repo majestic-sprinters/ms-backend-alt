@@ -3,23 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Jenssegers\Mongodb\Eloquent\Model as Eloquent;
 
-class User extends Model
+class User extends Eloquent
 {
-    use HasFactory;
+    protected $collection = 'users';
 
-    protected $table = 'users';
-
-    protected $primaryKey = 'id';
-
-    protected $fillable = [
-        'fio',
-        'gender',
-        'username',
-        'password',
-    ];
-
-    public $timestamps = false;
-
+    protected $fillable = ['fio', 'username', 'password', 'gender'];
 }
