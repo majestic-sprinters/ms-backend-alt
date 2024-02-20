@@ -10,6 +10,12 @@ class Book extends Eloquent
 {
     protected $collection = 'books';
 
-    protected $fillable = ['name', 'description', 'author', 'year', 'publisher'];
+    protected $fillable = [
+        'name',
+        'description',
+        'author',
+        'year',
+        'publisher'
+    ];
 
 }
