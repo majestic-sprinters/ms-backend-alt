@@ -1,36 +1,61 @@
-# Use the official PHP image as base
-FROM php:8.1-fpm
+# Используем официальный образ PHP с предустановленным Composer
+FROM php:8.0-fpm
 
-# Set working directory
-WORKDIR /var/www/html
+# Устанавливаем рабочую директорию в контейнере
+WORKDIR /var/www
 
-# Install system dependencies
+# Устанавливаем зависимости
 RUN apt-get update && apt-get install -y \
     git \
+    curl \
+    libpng-dev \
+    libonig-dev \
+    libxml2-dev \
+    zip \
     unzip \
-    libssl-dev
+    libzip-dev \
+    libssl-dev \
+    libcurl4-openssl-dev \
+    pkg-config \
+    libpq-dev
 
-# Install MongoDB extension
-RUN pecl install mongodb \
-    && docker-php-ext-enable mongodb
+# Очищаем кеш
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Install Composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+# Устанавливаем расширения PHP
+RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip
 
-# Copy composer.json and composer.lock to install dependencies
-COPY composer.json composer.lock ./
+# Устанавливаем расширение MongoDB
+RUN pecl install mongodb && docker-php-ext-enable mongodb
 
-# Install PHP dependencies
-RUN composer install --no-scripts --no-autoloader
+# Устанавливаем Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Copy the rest of the application
-COPY . .
+# Копируем исходный код Laravel
+COPY . /var/www
 
-# Generate autoload files and optimize
+# Устанавливаем зависимости Composer
+RUN composer install --optimize-autoloader --no-dev
+
+# Копируем .env файл
+COPY .env /var/www/.env
+
+# Генерируем ключ приложения
+RUN php artisan key:generate
+
+# Кэшируем конфигурацию и маршруты
+RUN php artisan config:cache
+RUN php artisan route:cache
+
+# Оптимизируем загрузку классов
 RUN composer dump-autoload --optimize
 
-# Expose port 9000 to be used by Laravel application
+# Настраиваем права доступа
+RUN chown -R www-data:www-data /var/www
+RUN chmod -R 755 /var/www/storage
+
+# Открываем порт 9000
 EXPOSE 9000
 
-# Start Laravel's built-in server
-CMD php artisan serve --host=0.0.0.0 --port=9000
+# Запускаем PHP-FPM
+CMD ["php-fpm"]
