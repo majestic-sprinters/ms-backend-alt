@@ -4,16 +4,6 @@ services:
         build:
             context: .
             dockerfile: Dockerfile
-            args:
-                APP_ENV: ${APP_ENV}
-                APP_DEBUG: ${APP_DEBUG}
-                APP_URL: ${APP_URL}
-                DB_CONNECTION: ${DB_CONNECTION}
-                DB_HOST: ${DB_HOST}
-                DB_PORT: ${DB_PORT}
-                DB_DATABASE: ${DB_DATABASE}
-                DB_USERNAME: ${DB_USERNAME}
-                DB_PASSWORD: ${DB_PASSWORD}
         image: laravel-app
         container_name: laravel-app
         restart: unless-stopped
@@ -27,8 +17,6 @@ services:
             - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
         networks:
             - app-network
-        env_file:
-            - .env
 
     db:
         image: mongo:latest
@@ -36,8 +24,8 @@ services:
         ports:
             - "27017:27017"
         environment:
-            MONGO_INITDB_ROOT_USERNAME: ${DB_USERNAME}
-            MONGO_INITDB_ROOT_PASSWORD: ${DB_PASSWORD}
+            MONGO_INITDB_ROOT_USERNAME: admin
+            MONGO_INITDB_ROOT_PASSWORD: admin
         volumes:
             - dbdata:/data/db
         networks:
