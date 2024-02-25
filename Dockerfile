@@ -1,5 +1,16 @@
 # Используем официальный образ PHP с предустановленным Composer
-FROM php:8.0-fpm
+FROM php:8.1-fpm
+
+# Устанавливаем аргументы для переменных окружения (значения будут заданы в docker-compose.yml)
+ARG APP_ENV
+ARG APP_DEBUG
+ARG APP_URL
+ARG DB_CONNECTION
+ARG DB_HOST
+ARG DB_PORT
+ARG DB_DATABASE
+ARG DB_USERNAME
+ARG DB_PASSWORD
 
 # Устанавливаем рабочую директорию в контейнере
 WORKDIR /var/www
@@ -34,11 +45,11 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Копируем исходный код Laravel
 COPY . /var/www
 
+# Копируем .env.example в .env
+COPY .env.example /var/www/.env
+
 # Устанавливаем зависимости Composer
 RUN composer install --optimize-autoloader --no-dev
-
-# Копируем .env файл
-COPY .env /var/www/.env
 
 # Генерируем ключ приложения
 RUN php artisan key:generate
